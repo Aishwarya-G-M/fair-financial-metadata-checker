@@ -1,0 +1,15 @@
+{
+  "identifier": "",
+  "dataset_name": "Fraud Dataset",
+  "description": "",
+  "owner_team": "Fraud Ops",
+  "data_domain": "fraud_detection",
+  "access_rights": "restricted",
+  "access_request_contact": null,
+  "license_or_usage_terms": "",
+  "provenance": "",
+  "schema_version": "",
+  "domain_standard": null,
+  "contains_pii": true,
+  "retention_policy": ""
+}
