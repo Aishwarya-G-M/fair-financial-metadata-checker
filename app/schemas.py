@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
 from typing import Optional, List
 
 
@@ -9,7 +9,7 @@ class FinancialDatasetMetadata(BaseModel):
     owner_team: str = Field(..., description="Team responsible for the dataset")
     data_domain: str = Field(..., description="Business/domain classification")
     access_rights: str = Field(..., description="Access level such as internal or restricted")
-    access_request_contact: Optional[EmailStr] = Field(
+    access_request_contact: Optional[str] = Field(
         default=None,
         description="Contact for requesting dataset access",
     )
@@ -30,10 +30,16 @@ class CheckResult(BaseModel):
     passed: bool
     message: str
 
+class PrincipleScore(BaseModel):
+    principle: str
+    total_checks: int
+    passed_checks: int
+    score: float
 
 class AssessmentResponse(BaseModel):
     total_checks: int
     passed_checks: int
     score: float
+    principle_scores: List[PrincipleScore]
     results: List[CheckResult]
     recommendations: List[str]
