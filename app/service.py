@@ -1,4 +1,6 @@
-from app.schemas import FinancialDatasetMetadata, CheckResult, AssessmentResponse
+from collections import defaultdict
+
+from app.schemas import FinancialDatasetMetadata, CheckResult, AssessmentResponse, PrincipleScore
 
 
 def assess_metadata(metadata: FinancialDatasetMetadata) -> AssessmentResponse:
@@ -112,10 +114,32 @@ def assess_metadata(metadata: FinancialDatasetMetadata) -> AssessmentResponse:
     passed_checks = sum(1 for result in results if result.passed)
     score = round(passed_checks / total_checks, 2) if total_checks else 0.0
 
+    principle_buckets = defaultdict(list)
+    for result in results:
+        principle_buckets[result.principle].append(result)
+
+    principle_scores = []
+    for principle, bucket in principle_buckets.items():
+        principle_total = len(bucket)
+        principle_passed = sum(1 for item in bucket if item.passed)
+        principle_score = round(principle_passed / principle_total, 2) if principle_total else 0.0
+
+        principle_scores.append(
+            PrincipleScore(
+                principle=principle,
+                total_checks=principle_total,
+                passed_checks=principle_passed,
+                score=principle_score,
+            )
+        )
+
+    principle_scores.sort(key=lambda item: item.principle)
+
     return AssessmentResponse(
         total_checks=total_checks,
         passed_checks=passed_checks,
         score=score,
+        principle_scores=principle_scores,
         results=results,
         recommendations=recommendations,
     )
